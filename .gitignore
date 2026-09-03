@@ -1,0 +1,30 @@
+#敏感信息
+main.py
+*.py.bak
+.env
+config.ini
+secrets.py
+
+#Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+ENV/
+pip-log.txt
+pip-delete-this-directory.txt
+
+#IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+#其他系统文件
+Thumbs.db
+desktop.ini
