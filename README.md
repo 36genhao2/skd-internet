@@ -15,6 +15,7 @@
 ## 一键配置
 
 ### 克隆或下载本项目
+
 ```bash
 
 git clone https://github.com/36genhao2/USTS-internet.git
@@ -64,8 +65,6 @@ USTS-internet/
 └── .gitignore # 忽略敏感文件
 
 ```
-
----
 
 ## 注意事项
 
