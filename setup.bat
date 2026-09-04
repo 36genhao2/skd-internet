@@ -43,7 +43,7 @@ if errorlevel 1 (
 echo.
 echo ---- 配置校园网账号信息 ----
 
-set /p input_username="学号 (如 20231145): "
+set /p input_username="学号: "
 if "%input_username%"=="" (
     echo [错误] 学号不能为空。
     pause
@@ -71,7 +71,7 @@ if "%choice%"=="2" set carrier=@cmcc
 if "%choice%"=="3" set carrier=@unicom
 if "%choice%"=="4" set carrier=@telecom
 
-REM ---- 直接把账号信息写回 main.py（可反复运行，覆盖已有值） ----
+REM ---- 直接把账号信息写回 main.py ----
 set "USTS_USER=%input_username%"
 set "USTS_PASS=%input_password%"
 set "USTS_CARRIER=%carrier%"
@@ -95,7 +95,7 @@ findstr /B /C:"password = " main.py | findstr "." >nul
 if errorlevel 1 (
     echo [错误] 密码写入校验未通过，请手动检查 main.py。
 ) else (
-    echo [验证] 密码已写入 main.py（不回显密码内容）
+    echo [验证] 密码已写入 main.py
 )
 
 findstr /B /C:"carrier_suffix = " main.py | findstr /C:"%carrier%" >nul
