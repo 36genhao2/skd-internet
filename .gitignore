@@ -1,5 +1,4 @@
 #敏感信息
-main.py
 *.py.bak
 .env
 config.ini

@@ -1,86 +1,110 @@
 @echo off
-setlocal enabledelayedexpansion
+chcp 65001 >nul
+setlocal
+
+REM ---- åˆ‡æ¢åˆ°è„šæœ¬æ‰€åœ¨ç›®å½• ----
+cd /d "%~dp0"
 
 echo ========================================
-echo     USTSÁªÍø³õÊ¼»¯
+echo     USTS æ ¡å›­ç½‘ç™»å½•é…ç½®
 echo ========================================
 
-REM ---- ¼ì²é Python ----
+REM ---- æ£€æŸ¥ Python ----
 python --version >nul 2>&1
 if errorlevel 1 (
-    echo ´íÎó£ºÎ´ÕÒµ½ Python£¬ÇëÏÈ°²×°²¢Ìí¼Óµ½ PATH¡£
+    echo [é”™è¯¯] æœªæ‰¾åˆ° Pythonï¼Œè¯·å…ˆå®‰è£…å¹¶åŠ å…¥ PATHã€‚
     pause
     exit /b 1
 )
 
-REM ---- ÏÔÊ¾ Python °æ±¾ ----
 for /f "delims=" %%i in ('python --version 2^>^&1') do set pyver=%%i
-echo ¼ì²âµ½ %pyver%
+echo æ£€æµ‹åˆ° %pyver%
 
-REM ---- ¼ì²â requests ÊÇ·ñÒÑ°²×° ----
+REM ---- æ£€æŸ¥ requests ----
 python -c "import requests" >nul 2>&1
 if errorlevel 1 (
-    echo requests ¿âÎ´°²×°¡£
-    set /p install_deps="ÊÇ·ñ°²×° requests£¿(y/n£¬Ä¬ÈÏ y): "
-    if /i not "!install_deps!"=="n" (
-        echo ÕıÔÚ°²×° requests...
+    echo requests å°šæœªå®‰è£…ã€‚
+    set /p install_deps="æ˜¯å¦å®‰è£… requestsï¼Ÿ(y/nï¼Œé»˜è®¤ y): "
+    if /i not "%install_deps%"=="n" (
+        echo æ­£åœ¨å®‰è£… requests...
         pip install requests
         if errorlevel 1 (
-            echo °²×°Ê§°Ü£¬Çë¼ì²éÍøÂç»ò pip Ô´¡£
+            echo å®‰è£…å¤±è´¥ï¼Œè¯·æ›´æ¢ pip æºåé‡è¯•ã€‚
             pause
             exit /b 1
         )
     ) else (
-        echo Ìø¹ı°²×°£¬ÇëÈ·±£ÒÑÊÖ¶¯°²×° requests¡£
+        echo è·³è¿‡å®‰è£…ï¼Œè¯·ç¡®è®¤å·²æ‰‹åŠ¨å®‰è£… requestsã€‚
     )
 ) else (
-    echo requests ÒÑ°²×°
+    echo requests å·²å®‰è£…
 )
 
 echo.
-echo ---- ÇëÊäÈëÄúµÄĞ£Ô°ÍøÕËºÅĞÅÏ¢ ----
+echo ---- é…ç½®æ ¡å›­ç½‘è´¦å·ä¿¡æ¯ ----
 
-set /p input_username="Ñ§ºÅ (ÀıÈç 20231145): "
-set /p input_password="ÃÜÂë: "
-
-echo.
-echo ÇëÑ¡ÔñÔËÓªÉÌ£º
-echo   1. Ğ£Ô°Íø (@keda)
-echo   2. ÖĞ¹úÒÆ¶¯ (@cmcc)
-echo   3. ÖĞ¹úÁªÍ¨ (@unicom)
-echo   4. ÖĞ¹úµçĞÅ (@telecom)
-set /p choice="ÊäÈë±àºÅ (1-4): "
-
-if "%choice%"=="1" set carrier=@keda
-if "%choice%"=="2" set carrier=@cmcc
-if "%choice%"=="3" set carrier=@unicom
-if "%choice%"=="4" set carrier=@telecom
-if not defined carrier (
-    echo ÎŞĞ§Ñ¡Ôñ£¬Ä¬ÈÏÊ¹ÓÃ @unicom
-    set carrier=@unicom
+set /p input_username="å­¦å· (å¦‚ 20231145): "
+if "%input_username%"=="" (
+    echo [é”™è¯¯] å­¦å·ä¸èƒ½ä¸ºç©ºã€‚
+    pause
+    exit /b 1
 )
 
-REM ---- ±¸·İÔ­Ê¼ÎÄ¼ş£¨¿ÉÑ¡£© ----
-if not exist main.py.bak (
-    copy main.py main.py.bak >nul
-    echo ÒÑ±¸·İÔ­ÎÄ¼şÎª main.py.bak
-)
-
-REM ---- Ê¹ÓÃ PowerShell ¾«×¼Ìæ»»±äÁ¿ ----
-powershell -Command ^
-    $content = Get-Content -Path 'main.py' -Raw; ^
-    $content = $content -replace '(?<=username = )".*?"', '"%input_username%"'; ^
-    $content = $content -replace '(?<=password = )".*?"', '"%input_password%"'; ^
-    $content = $content -replace '(?<=carrier_suffix = )".*?"', '"%carrier%"'; ^
-    Set-Content -Path 'main.py' -Value $content -Encoding UTF8
-
-if errorlevel 1 (
-    echo Ìæ»»Ê§°Ü£¬Çë¼ì²éÎÄ¼şÊÇ·ñ´æÔÚ»òÊÇ·ñÓĞĞ´È¨ÏŞ¡£
+set /p input_password="å¯†ç : "
+if "%input_password%"=="" (
+    echo [é”™è¯¯] å¯†ç ä¸èƒ½ä¸ºç©ºã€‚
     pause
     exit /b 1
 )
 
 echo.
-echo ³õÊ¼»¯Íê³É£¡ÒÑ½«ÄúµÄÕËºÅĞÅÏ¢Ğ´Èë main.py¡£
-echo Äú¿ÉÒÔË«»÷ÔËĞĞ python main.py ²âÊÔµÇÂ¼¡£
+echo è¯·é€‰æ‹©è¿è¥å•†ï¼š
+echo   1. æ ¡å›­ç½‘ (@keda)
+echo   2. ä¸­å›½ç§»åŠ¨ (@cmcc)
+echo   3. ä¸­å›½è”é€š (@unicom)
+echo   4. ä¸­å›½ç”µä¿¡ (@telecom)
+set /p choice="é€‰æ‹© (1-4): "
+
+set carrier=@unicom
+if "%choice%"=="1" set carrier=@keda
+if "%choice%"=="2" set carrier=@cmcc
+if "%choice%"=="3" set carrier=@unicom
+if "%choice%"=="4" set carrier=@telecom
+
+REM ---- ç›´æ¥æŠŠè´¦å·ä¿¡æ¯å†™å› main.pyï¼ˆå¯åå¤è¿è¡Œï¼Œè¦†ç›–å·²æœ‰å€¼ï¼‰ ----
+set "USTS_USER=%input_username%"
+set "USTS_PASS=%input_password%"
+set "USTS_CARRIER=%carrier%"
+python -c "import os,re;q=chr(34).encode();b=open('main.py','rb').read();u=os.environ['USTS_USER'].encode('utf-8');p=os.environ['USTS_PASS'].encode('utf-8');c=os.environ['USTS_CARRIER'].encode('utf-8');b=re.sub(b'^username = '+q+b'[^'+q+b']*'+q,b'username = '+q+u+q,b,count=1,flags=re.M);b=re.sub(b'^password = '+q+b'[^'+q+b']*'+q,b'password = '+q+p+q,b,count=1,flags=re.M);b=re.sub(b'^carrier_suffix = '+q+b'[^'+q+b']*'+q,b'carrier_suffix = '+q+c+q,b,count=1,flags=re.M);open('main.py','wb').write(b)"
+if errorlevel 1 (
+    echo [é”™è¯¯] å†™å…¥ main.py å¤±è´¥ã€‚
+    pause
+    exit /b 1
+)
+
+echo.
+echo å·²å†™å…¥ main.pyï¼ŒéªŒè¯ä¸­...
+findstr /B /C:"username = " main.py | findstr /C:"%input_username%" >nul
+if errorlevel 1 (
+    echo [é”™è¯¯] å­¦å·å†™å…¥æ ¡éªŒæœªé€šè¿‡ï¼Œè¯·æ‰‹åŠ¨æ£€æŸ¥ main.pyã€‚
+) else (
+    echo [éªŒè¯] å­¦å·å·²å†™å…¥ main.py
+)
+
+findstr /B /C:"password = " main.py | findstr "." >nul
+if errorlevel 1 (
+    echo [é”™è¯¯] å¯†ç å†™å…¥æ ¡éªŒæœªé€šè¿‡ï¼Œè¯·æ‰‹åŠ¨æ£€æŸ¥ main.pyã€‚
+) else (
+    echo [éªŒè¯] å¯†ç å·²å†™å…¥ main.pyï¼ˆä¸å›æ˜¾å¯†ç å†…å®¹ï¼‰
+)
+
+findstr /B /C:"carrier_suffix = " main.py | findstr /C:"%carrier%" >nul
+if errorlevel 1 (
+    echo [é”™è¯¯] è¿è¥å•†å†™å…¥æ ¡éªŒæœªé€šè¿‡ï¼Œè¯·æ‰‹åŠ¨æ£€æŸ¥ main.pyã€‚
+) else (
+    echo [éªŒè¯] è¿è¥å•†å·²å†™å…¥ main.py
+)
+
+echo.
+echo é…ç½®å®Œæˆã€‚åŒå‡»è¿è¡Œ python main.py å³å¯ç™»å½•ã€‚
 pause
