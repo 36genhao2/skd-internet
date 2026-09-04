@@ -1,9 +1,9 @@
 import requests
 
-#setup.bat自动配置
+#setup.bat配置部分
 username = ""   #账号
 password = ""   #密码
-carrier_suffix = ""#运营商
+carrier_suffix = ""   #运营商
 
 #拼接完整的登录账号
 full_username = username + carrier_suffix
@@ -13,26 +13,26 @@ login_url = "http://10.160.63.9:801/eportal/?c=ACSetting&a=Login"
 
 # Dr.COM 系统的固定参数
 payload = {
-    'DDDDD': f'{full_username}',  #完整账号
-    'upass': password,  #密码
-    'R1': '0',  #固定值
-    'R2': '',  #固定值
-    'R3': '0',  #固定值
-    'R6': '0',  #固定值
-    'para': '00',  #固定值
-    '0MKKey': '123456'  #固定值
+    'DDDDD': f'{full_username}',   #完整账号
+    'upass': password,   #密码
+    'R1': '0',   #固定值
+    'R2': '',   #固定值
+    'R3': '0',   #固定值
+    'R6': '0',   #固定值
+    'para': '00',   #固定值
+    '0MKKey': '123456'   #固定值
 }
 
 #设置请求头，模拟浏览器访问，防止被拦截
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-    'Referer': 'http://10.160.63.9:801/eportal/?c=ACSetting&a=Login',  # 来源页面
-    'Accept-Language': 'zh-CN,zh;q=0.9',  # 语言
+    'Referer': 'http://10.160.63.9:801/eportal/?c=ACSetting&a=Login',   #来源页面
+    'Accept-Language': 'zh-CN,zh;q=0.9',   #语言
 }
 
 #发送请求
 try:
-    #发送 POST 请求
+    #发送POST请求
     response = requests.post(login_url, data=payload, headers=headers, timeout=10)
 
     #检查响应内容，判断是否成功
@@ -43,8 +43,6 @@ try:
         print(f" {carrier_suffix} 登录成功！")
     else:
         print(f" 登录失败，请检查账号密码或网络。")
-        #打印部分返回内容供调试
-        #print(response.text)
 
 except Exception as e:
 
